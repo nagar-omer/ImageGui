@@ -1,4 +1,5 @@
 ﻿using ImageServiceGui.pages;
+using ImageServiceGui.view_model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +26,17 @@ namespace ImageServiceGui {
         // public propertis to change elements in the pages
         public SettingsPage Settings;
         public LogPage Log;
+        private MainViewModel _viewModel;
 
         // constructor
         public MainWindow() {
             InitializeComponent();
-            DataContext = _windowData;
             Log = logPage;
             Settings = settingsPage;
+
+            _viewModel = new MainViewModel(this);
+
+            DataContext = _windowData;
         }
 
         // change background on main window(connected/disconnected)

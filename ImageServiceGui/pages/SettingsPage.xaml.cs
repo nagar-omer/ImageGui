@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,8 +21,11 @@ namespace ImageServiceGui.pages {
      
     // settings page User-Control 
     public partial class SettingsPage : UserControl {
+        public delegate void RemovedClickedHandker();
+        public delegate void HandlersListChangedHandker();
+        public event RemovedClickedHandker RemovedClicked;
+        public event HandlersListChangedHandker HandlersListChanged;
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private SettingsData _settingsData;
         public SettingsPage() {
             // init observable object
@@ -33,7 +35,7 @@ namespace ImageServiceGui.pages {
             InitializeComponent();
             DataContext = _settingsData;
         }
-        
+
         // set of function to change properties of the page
 
         public void SetOutDir(string outDir){
@@ -52,11 +54,11 @@ namespace ImageServiceGui.pages {
             _settingsData.ThumbSize = size.ToString();
         }
 
-        public void AddHndler(string handler) {
+        public void AddHndlerToList(string handler) {
             _settingsData.addHndler(handler);
         }
 
-        public void RemoveHndler(string handler) {
+        public void RemoveHndlerFromList(string handler) {
             _settingsData.removeHndler(handler);
         }
 
@@ -69,24 +71,11 @@ namespace ImageServiceGui.pages {
         }
 
         private void OnRemoveButtonClicked(object sender, RoutedEventArgs e) {
-            // TODO activate view model func
+            RemovedClicked();
         }
-        //get functions for requiered things.
-        public string GetOutDir()
-        {
-            return this._settingsData.OutputDir;
-        }
-        public string GetSourceName()
-        {
-            return this._settingsData.SourceName;
-        }
-        public string GetLogName()
-        {
-            return this._settingsData.LogName;
-        }
-        public int GetThumbnailSize()
-        {
-            return Int32.Parse(this._settingsData.ThumbSize);
+
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            HandlersListChanged();
         }
     }
 }
